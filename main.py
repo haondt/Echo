@@ -8,6 +8,13 @@ with open('token.txt') as tokenfile:
 client = discord.Client()
 
 @client.event
+async def on_ready():
+	print('Logged in as')
+	print(client.user.name)
+	print(client.user.id)
+	print('-'*10)
+
+@client.event
 async def on_message(message):
 	# don't let bot reply to itself
 	if message.author != client.user:
