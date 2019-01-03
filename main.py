@@ -7,6 +7,7 @@ with open('token.txt') as tokenfile:
 
 client = discord.Client()
 
+
 @client.event
 async def on_ready():
 	print('Logged in as')
@@ -51,8 +52,27 @@ async def on_message(message):
 				voice_client = await client.join_voice_channel(voice_channel)
 			
 			
-			await client.send_message(message.channel, 'Added %s to queue' % message.content)
+			# ensure message includes a song title or url is valid
+			title = message.content.split()
+			if len(title) < 2:
+				return
+			title = ' '.join(title[1:])
+			
+			# start player and/or add song to queue
+			player = await voice_client.create_ytdl_player(title, after=playnext)
+			print(player.url)
+			player.start()
 
+			await client.send_message(message.channel, 'Added %s to queue' % title)
+
+def playnext(player):
+	pass
+	#play next song in queue
+	print(player.is_done())
+	print(player.is_playing())
+	print('test1')
+	print(player.error)
+	print('test')
 
 # leave voice channel if it is in there all by itself
 @client.event
@@ -65,8 +85,8 @@ async def on_voice_state_update(before, after):
 				voice_client = client.voice_client_in(server)
 				if voice_client.channel == channel:
 					if len(channel.voice_members) < 2:
+						player = None
 						await voice_client.disconnect()
 				
 		
-
 client.run(token)

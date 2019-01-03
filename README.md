@@ -8,4 +8,4 @@ Token should be stored in a single line file in the root directory called "token
 
 ### Requirements
 * discord.py
-
+* youtube\_dl
